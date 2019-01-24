@@ -7,7 +7,7 @@
 
 ## Overview
 
-A ROS wrapper around the [GPD](git clone https://github.com/atenpas/gpd2_ros) package for detecting 6-DOF grasp poses for a
+A ROS wrapper around the [GPD](https://github.com/atenpas/gpd2_ros) package for detecting 6-DOF grasp poses for a
 2-finger robot hand (e.g., a parallel jaw gripper) in 3D point clouds.
 
 ## 1) Installation
