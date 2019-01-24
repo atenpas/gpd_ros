@@ -7,7 +7,7 @@
 
 ## Overview
 
-A ROS wrapper around the [GPD](https://github.ccs.neu.edu/atp/gpd_no_ros) package for detecting 6-DOF grasp poses for a
+A ROS wrapper around the [GPD](git clone https://github.com/atenpas/gpd2_ros) package for detecting 6-DOF grasp poses for a
 2-finger robot hand (e.g., a parallel jaw gripper) in 3D point clouds.
 
 ## 1) Installation
@@ -15,13 +15,13 @@ A ROS wrapper around the [GPD](https://github.ccs.neu.edu/atp/gpd_no_ros) packag
 The following instructions have been tested on **Ubuntu 16.04**. Similar
 instructions should work for other Linux distributions.
 
-1. Install GPD. You can follow [these instructions](https://github.ccs.neu.edu/atp/gpd_no_ros#install).
+1. Install GPD. You can follow [these instructions](git clone https://github.com/atenpas/gpd2_ros#install).
 
 2. Clone this repository into the `src` folder of your catkin workspace:
 
    ```
    cd <location_of_your_workspace>/src
-   git clone https://github.ccs.neu.edu/atp/gpd_ros.git
+   git clone https://github.com/atenpas/gpd2_ros
    ```
 
 3. Build your catkin workspace:
@@ -42,6 +42,6 @@ Now, we can run GPD as a ROS node. The following command will launch a ROS node
 that waits for point clouds on the ROS topic `/cloud_stitched`. Once a point
 cloud is received, the node will search the cloud for grasps.
 
-   ```
-   roslaunch gpd_ros ur5.launch
-   ```
+```
+roslaunch gpd_ros ur5.launch
+```
