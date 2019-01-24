@@ -15,7 +15,7 @@ A ROS wrapper around the [GPD](git clone https://github.com/atenpas/gpd2_ros) pa
 The following instructions have been tested on **Ubuntu 16.04**. Similar
 instructions should work for other Linux distributions.
 
-1. Install GPD. You can follow [these instructions](git clone https://github.com/atenpas/gpd2_ros#install).
+1. Install GPD. You can follow [these instructions](https://github.com/atenpas/gpd2#install).
 
 2. Clone this repository into the `src` folder of your catkin workspace:
 
