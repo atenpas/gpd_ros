@@ -1,9 +1,8 @@
 # ROS Wrapper for GPD
 
-* **Author:** Andreas ten Pas (atp@ccs.neu.edu)
-* **Version:** 1.0.0
-* **Author's website:** [http://www.ccs.neu.edu/home/atp/](http://www.ccs.neu.edu/home/atp/)
-* **License:** BSD
+* [Author's website](http://www.ccs.neu.edu/home/atp/)
+* [License](https://github.com/atenpas/gpd2_ros/blob/master/LICENSE.md)
+* [GPD library](https://github.com/atenpas/gpd2)
 
 ## Overview
 
