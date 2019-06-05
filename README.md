@@ -44,3 +44,11 @@ cloud is received, the node will search the cloud for grasps.
 ```
 roslaunch gpd_ros ur5.launch
 ```
+
+## 3) Troubleshooting
+
+If `catkin_make` cannot find `libinference_engine.so`, make sure that `LD_LIBRARY_PATH` contains the path to that library:
+
+```
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:path_to_dldt/inference-engine/bin/intel64/Release/lib/
+```

@@ -38,33 +38,28 @@ GraspDetectionNode::GraspDetectionNode(ros::NodeHandle& node) : has_cloud_(false
   std::string samples_topic;
   node.param("samples_topic", samples_topic, std::string(""));
   std::string rviz_topic;
-  node.param("rviz_topic", rviz_topic, std::string(""));
+  node.param("rviz_topic", rviz_topic, std::string("plot_grasps"));
 
-  if (!rviz_topic.empty())
-  {
+  if (!rviz_topic.empty()) {
     grasps_rviz_pub_ = node.advertise<visualization_msgs::MarkerArray>(rviz_topic, 1);
     use_rviz_ = true;
-  }
-  else
-  {
+  } else {
     use_rviz_ = false;
   }
 
   // subscribe to input point cloud ROS topic
-  if (cloud_type == POINT_CLOUD_2)
+  if (cloud_type == POINT_CLOUD_2) {
     cloud_sub_ = node.subscribe(cloud_topic, 1, &GraspDetectionNode::cloud_callback, this);
-  else if (cloud_type == CLOUD_INDEXED)
+  } else if (cloud_type == CLOUD_INDEXED) {
     cloud_sub_ = node.subscribe(cloud_topic, 1, &GraspDetectionNode::cloud_indexed_callback, this);
-  else if (cloud_type == CLOUD_SAMPLES)
-  {
+  } else if (cloud_type == CLOUD_SAMPLES) {
     cloud_sub_ = node.subscribe(cloud_topic, 1, &GraspDetectionNode::cloud_samples_callback, this);
     //    grasp_detector_->setUseIncomingSamples(true);
     has_samples_ = false;
   }
 
   // subscribe to input samples ROS topic
-  if (!samples_topic.empty())
-  {
+  if (!samples_topic.empty()) {
     samples_sub_ = node.subscribe(samples_topic, 1, &GraspDetectionNode::samples_callback, this);
     has_samples_ = false;
   }
@@ -83,16 +78,13 @@ void GraspDetectionNode::run()
   ros::Rate rate(100);
   ROS_INFO("Waiting for point cloud to arrive ...");
 
-  while (ros::ok())
-  {
-    if (has_cloud_)
-    {
+  while (ros::ok()) {
+    if (has_cloud_) {
       // Detect grasps in point cloud.
       std::vector<std::unique_ptr<gpd::candidate::Hand>> grasps = detectGraspPoses();
 
       // Visualize the detected grasps in rviz.
-      if (use_rviz_)
-      {
+      if (use_rviz_) {
         rviz_plotter_->drawGrasps(grasps, frame_);
       }
 
