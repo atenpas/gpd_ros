@@ -1,6 +1,5 @@
 #include <gpd_ros/grasp_detection_server.h>
 
-
 GraspDetectionServer::GraspDetectionServer(ros::NodeHandle& node)
 {
   cloud_camera_ = NULL;
@@ -33,7 +32,6 @@ GraspDetectionServer::GraspDetectionServer(ros::NodeHandle& node)
   node.getParam("workspace", workspace_);
 }
 
-
 bool GraspDetectionServer::detectGrasps(gpd_ros::detect_grasps::Request& req, gpd_ros::detect_grasps::Response& res)
 {
   ROS_INFO("Received service request ...");
@@ -46,13 +44,12 @@ bool GraspDetectionServer::detectGrasps(gpd_ros::detect_grasps::Request& req, gp
   Eigen::Matrix3Xd view_points(3, cloud_sources.view_points.size());
   for (int i = 0; i < cloud_sources.view_points.size(); i++)
   {
-    view_points.col(i) << cloud_sources.view_points[i].x, cloud_sources.view_points[i].y,
-      cloud_sources.view_points[i].z;
+    view_points.col(i) << cloud_sources.view_points[i].x, cloud_sources.view_points[i].y, cloud_sources.view_points[i].z;
   }
 
   // Set point cloud.
   if (cloud_sources.cloud.fields.size() == 6 && cloud_sources.cloud.fields[3].name == "normal_x"
-    && cloud_sources.cloud.fields[4].name == "normal_y" && cloud_sources.cloud.fields[5].name == "normal_z")
+      && cloud_sources.cloud.fields[4].name == "normal_y" && cloud_sources.cloud.fields[5].name == "normal_z")
   {
     PointCloudPointNormal::Ptr cloud(new PointCloudPointNormal);
     pcl::fromROSMsg(cloud_sources.cloud, *cloud);
@@ -84,7 +81,7 @@ bool GraspDetectionServer::detectGrasps(gpd_ros::detect_grasps::Request& req, gp
 
   // Set the indices at which to sample grasp candidates.
   std::vector<int> indices(req.cloud_indexed.indices.size());
-  for (int i=0; i < indices.size(); i++)
+  for (int i = 0; i < indices.size(); i++)
   {
     indices[i] = req.cloud_indexed.indices[i].data;
   }
@@ -92,8 +89,9 @@ bool GraspDetectionServer::detectGrasps(gpd_ros::detect_grasps::Request& req, gp
 
   frame_ = req.cloud_indexed.cloud_sources.cloud.header.frame_id;
 
-  ROS_INFO_STREAM("Received cloud with " << cloud_camera_->getCloudProcessed()->size() << " points, and "
-    << req.cloud_indexed.indices.size() << " samples");
+  ROS_INFO_STREAM(
+      "Received cloud with " << cloud_camera_->getCloudProcessed()->size() << " points, and " <<
+        req.cloud_indexed.indices.size() << " samples");
 
   // 2. Preprocess the point cloud.
   grasp_detector_->preprocessPointCloud(*cloud_camera_);

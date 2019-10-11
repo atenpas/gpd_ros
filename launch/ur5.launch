@@ -2,9 +2,7 @@
   <node name="detect_grasps" pkg="gpd_ros" type="detect_grasps" output="screen">
 
     <!-- If sequential importance sampling is used (default: false) -->
-<!--
-    <param name="use_importance_sampling" value="false" />
--->
+    <!-- <param name="use_importance_sampling" value="false" /> -->
 
     <!-- What type of point cloud is used and what ROS topic it comes from -->
     <param name="cloud_type" value="2" /> <!-- 0: PointCloud2, 1: CloudIndexed, 2: CloudSamples -->
@@ -18,7 +16,5 @@
     <param name="config_file" value="/home/ur5/projects/gpd/cfg/ros_vino_params.cfg" />
 
     <param name="rviz_topic" value="plot_grasps" />
-
   </node>
-
 </launch>

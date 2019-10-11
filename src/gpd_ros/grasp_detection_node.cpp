@@ -1,26 +1,29 @@
 #include <gpd_ros/grasp_detection_node.h>
 
-
 /** constants for input point cloud types */
 const int GraspDetectionNode::POINT_CLOUD_2 = 0; ///< sensor_msgs/PointCloud2
 const int GraspDetectionNode::CLOUD_INDEXED = 1; ///< cloud with indices
 const int GraspDetectionNode::CLOUD_SAMPLES = 2; ///< cloud with (x,y,z) samples
 
-
-GraspDetectionNode::GraspDetectionNode(ros::NodeHandle& node) : has_cloud_(false), has_normals_(false),
-  size_left_cloud_(0), has_samples_(true), frame_(""), use_importance_sampling_(false)
+GraspDetectionNode::GraspDetectionNode(ros::NodeHandle& node)
+  : has_cloud_(false)
+  , has_normals_(false)
+  , size_left_cloud_(0)
+  , has_samples_(true)
+  , frame_("")
+  , use_importance_sampling_(false)
 {
   printf("Init ....\n");
   cloud_camera_ = NULL;
 
-  // set camera viewpoint to default origin
+//  // set camera viewpoint to default origin
 //  std::vector<double> camera_position;
 //  node.getParam("camera_position", camera_position);
 //  view_point_ << camera_position[0], camera_position[1], camera_position[2];
-
-  // choose sampling method for grasp detection
+//
+//  // choose sampling method for grasp detection
 //  node.param("use_importance_sampling", use_importance_sampling_, false);
-
+//
 //  if (use_importance_sampling_)
 //  {
 //    importance_sampling_ = new SequentialImportanceSampling(node);
@@ -40,26 +43,35 @@ GraspDetectionNode::GraspDetectionNode(ros::NodeHandle& node) : has_cloud_(false
   std::string rviz_topic;
   node.param("rviz_topic", rviz_topic, std::string("plot_grasps"));
 
-  if (!rviz_topic.empty()) {
+  if (!rviz_topic.empty())
+  {
     grasps_rviz_pub_ = node.advertise<visualization_msgs::MarkerArray>(rviz_topic, 1);
     use_rviz_ = true;
-  } else {
+  }
+  else
+  {
     use_rviz_ = false;
   }
 
   // subscribe to input point cloud ROS topic
-  if (cloud_type == POINT_CLOUD_2) {
+  if (cloud_type == POINT_CLOUD_2)
+  {
     cloud_sub_ = node.subscribe(cloud_topic, 1, &GraspDetectionNode::cloud_callback, this);
-  } else if (cloud_type == CLOUD_INDEXED) {
+  }
+  else if (cloud_type == CLOUD_INDEXED)
+  {
     cloud_sub_ = node.subscribe(cloud_topic, 1, &GraspDetectionNode::cloud_indexed_callback, this);
-  } else if (cloud_type == CLOUD_SAMPLES) {
+  }
+  else if (cloud_type == CLOUD_SAMPLES)
+  {
     cloud_sub_ = node.subscribe(cloud_topic, 1, &GraspDetectionNode::cloud_samples_callback, this);
-    //    grasp_detector_->setUseIncomingSamples(true);
+//    grasp_detector_->setUseIncomingSamples(true);
     has_samples_ = false;
   }
 
   // subscribe to input samples ROS topic
-  if (!samples_topic.empty()) {
+  if (!samples_topic.empty())
+  {
     samples_sub_ = node.subscribe(samples_topic, 1, &GraspDetectionNode::samples_callback, this);
     has_samples_ = false;
   }
@@ -72,19 +84,21 @@ GraspDetectionNode::GraspDetectionNode(ros::NodeHandle& node) : has_cloud_(false
   node.getParam("workspace", workspace_);
 }
 
-
 void GraspDetectionNode::run()
 {
   ros::Rate rate(100);
   ROS_INFO("Waiting for point cloud to arrive ...");
 
-  while (ros::ok()) {
-    if (has_cloud_) {
+  while (ros::ok())
+  {
+    if (has_cloud_)
+    {
       // Detect grasps in point cloud.
       std::vector<std::unique_ptr<gpd::candidate::Hand>> grasps = detectGraspPoses();
 
       // Visualize the detected grasps in rviz.
-      if (use_rviz_) {
+      if (use_rviz_)
+      {
         rviz_plotter_->drawGrasps(grasps, frame_);
       }
 
@@ -100,7 +114,6 @@ void GraspDetectionNode::run()
   }
 }
 
-
 std::vector<std::unique_ptr<gpd::candidate::Hand>> GraspDetectionNode::detectGraspPoses()
 {
   // detect grasp poses
@@ -112,7 +125,7 @@ std::vector<std::unique_ptr<gpd::candidate::Hand>> GraspDetectionNode::detectGra
 //    cloud_camera_->voxelizeCloud(0.003);
 //    cloud_camera_->calculateNormals(4);
 //    grasps = importance_sampling_->detectGrasps(*cloud_camera_);
-	  printf("Error: importance sampling is not supported yet\n");
+    printf("Error: importance sampling is not supported yet\n");
   }
   else
   {
@@ -131,9 +144,8 @@ std::vector<std::unique_ptr<gpd::candidate::Hand>> GraspDetectionNode::detectGra
   return grasps;
 }
 
-
 std::vector<int> GraspDetectionNode::getSamplesInBall(const PointCloudRGBA::Ptr& cloud,
-  const pcl::PointXYZRGBA& centroid, float radius)
+                                                      const pcl::PointXYZRGBA& centroid, float radius)
 {
   std::vector<int> indices;
   std::vector<float> dists;
@@ -143,7 +155,6 @@ std::vector<int> GraspDetectionNode::getSamplesInBall(const PointCloudRGBA::Ptr&
   return indices;
 }
 
-
 void GraspDetectionNode::cloud_callback(const sensor_msgs::PointCloud2& msg)
 {
   if (!has_cloud_)
@@ -151,11 +162,11 @@ void GraspDetectionNode::cloud_callback(const sensor_msgs::PointCloud2& msg)
     delete cloud_camera_;
     cloud_camera_ = NULL;
 
-    Eigen::Matrix3Xd view_points(3,1);
+    Eigen::Matrix3Xd view_points(3, 1);
     view_points.col(0) = view_point_;
 
     if (msg.fields.size() == 6 && msg.fields[3].name == "normal_x" && msg.fields[4].name == "normal_y"
-      && msg.fields[5].name == "normal_z")
+        && msg.fields[5].name == "normal_z")
     {
       PointCloudPointNormal::Ptr cloud(new PointCloudPointNormal);
       pcl::fromROSMsg(msg, *cloud);
@@ -177,7 +188,6 @@ void GraspDetectionNode::cloud_callback(const sensor_msgs::PointCloud2& msg)
   }
 }
 
-
 void GraspDetectionNode::cloud_indexed_callback(const gpd_ros::CloudIndexed& msg)
 {
   if (!has_cloud_)
@@ -186,7 +196,7 @@ void GraspDetectionNode::cloud_indexed_callback(const gpd_ros::CloudIndexed& msg
 
     // Set the indices at which to sample grasp candidates.
     std::vector<int> indices(msg.indices.size());
-    for (int i=0; i < indices.size(); i++)
+    for (int i = 0; i < indices.size(); i++)
     {
       indices[i] = msg.indices[i].data;
     }
@@ -195,11 +205,11 @@ void GraspDetectionNode::cloud_indexed_callback(const gpd_ros::CloudIndexed& msg
     has_cloud_ = true;
     frame_ = msg.cloud_sources.cloud.header.frame_id;
 
-    ROS_INFO_STREAM("Received cloud with " << cloud_camera_->getCloudProcessed()->size() << " points, and "
-      << msg.indices.size() << " samples");
+    ROS_INFO_STREAM(
+        "Received cloud with " << cloud_camera_->getCloudProcessed()->size() << " points, and " << msg.indices.size()
+          << " samples");
   }
 }
-
 
 void GraspDetectionNode::cloud_samples_callback(const gpd_ros::CloudSamples& msg)
 {
@@ -209,7 +219,7 @@ void GraspDetectionNode::cloud_samples_callback(const gpd_ros::CloudSamples& msg
 
     // Set the samples at which to sample grasp candidates.
     Eigen::Matrix3Xd samples(3, msg.samples.size());
-    for (int i=0; i < msg.samples.size(); i++)
+    for (int i = 0; i < msg.samples.size(); i++)
     {
       samples.col(i) << msg.samples[i].x, msg.samples[i].y, msg.samples[i].z;
     }
@@ -219,11 +229,11 @@ void GraspDetectionNode::cloud_samples_callback(const gpd_ros::CloudSamples& msg
     has_samples_ = true;
     frame_ = msg.cloud_sources.cloud.header.frame_id;
 
-    ROS_INFO_STREAM("Received cloud with " << cloud_camera_->getCloudProcessed()->size() << " points, and "
-      << cloud_camera_->getSamples().cols() << " samples");
+    ROS_INFO_STREAM(
+        "Received cloud with " << cloud_camera_->getCloudProcessed()->size() << " points, and " <<
+          cloud_camera_->getSamples().cols() << " samples");
   }
 }
-
 
 void GraspDetectionNode::samples_callback(const gpd_ros::SamplesMsg& msg)
 {
@@ -231,7 +241,7 @@ void GraspDetectionNode::samples_callback(const gpd_ros::SamplesMsg& msg)
   {
     Eigen::Matrix3Xd samples(3, msg.samples.size());
 
-    for (int i=0; i < msg.samples.size(); i++)
+    for (int i = 0; i < msg.samples.size(); i++)
     {
       samples.col(i) << msg.samples[i].x, msg.samples[i].y, msg.samples[i].z;
     }
@@ -242,7 +252,6 @@ void GraspDetectionNode::samples_callback(const gpd_ros::SamplesMsg& msg)
     ROS_INFO_STREAM("Received grasp samples message with " << msg.samples.size() << " samples");
   }
 }
-
 
 void GraspDetectionNode::initCloudCamera(const gpd_ros::CloudSources& msg)
 {
@@ -258,8 +267,8 @@ void GraspDetectionNode::initCloudCamera(const gpd_ros::CloudSources& msg)
   }
 
   // Set point cloud.
-  if (msg.cloud.fields.size() == 6 && msg.cloud.fields[3].name == "normal_x"
-    && msg.cloud.fields[4].name == "normal_y" && msg.cloud.fields[5].name == "normal_z")
+  if (msg.cloud.fields.size() == 6 && msg.cloud.fields[3].name == "normal_x" && msg.cloud.fields[4].name == "normal_y"
+      && msg.cloud.fields[5].name == "normal_z")
   {
     PointCloudPointNormal::Ptr cloud(new PointCloudPointNormal);
     pcl::fromROSMsg(msg.cloud, *cloud);

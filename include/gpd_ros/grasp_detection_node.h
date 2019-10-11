@@ -75,8 +75,7 @@ typedef pcl::PointCloud<pcl::PointNormal> PointCloudPointNormal;
  * \brief A ROS node that can detect grasp poses in a point cloud.
  *
  * This class is a ROS node that handles all the ROS topics.
- *
-*/
+ */
 class GraspDetectionNode
 {
 public:
@@ -84,12 +83,12 @@ public:
   /**
    * \brief Constructor.
    * \param node the ROS node
-  */
+   */
   GraspDetectionNode(ros::NodeHandle& node);
 
   /**
    * \brief Destructor.
-  */
+   */
   ~GraspDetectionNode()
   {
     delete cloud_camera_;
@@ -100,15 +99,14 @@ public:
 
   /**
    * \brief Run the ROS node. Loops while waiting for incoming ROS messages.
-  */
+   */
   void run();
 
   /**
    * \brief Detect grasp poses in a point cloud received from a ROS topic.
    * \return the list of grasp poses
-  */
+   */
   std::vector<std::unique_ptr<gpd::candidate::Hand>> detectGraspPoses();
-
 
 private:
 
@@ -118,25 +116,25 @@ private:
    * \param centroid the centroid of the ball
    * \param radius the radius of the ball
    * \return the indices of the points in the point cloud that lie within the ball
-  */
+   */
   std::vector<int> getSamplesInBall(const PointCloudRGBA::Ptr& cloud, const pcl::PointXYZRGBA& centroid, float radius);
 
   /**
    * \brief Callback function for the ROS topic that contains the input point cloud.
    * \param msg the incoming ROS message
-  */
+   */
   void cloud_callback(const sensor_msgs::PointCloud2& msg);
 
   /**
    * \brief Callback function for the ROS topic that contains the input point cloud and a list of indices.
    * \param msg the incoming ROS message
-  */
+   */
   void cloud_indexed_callback(const gpd_ros::CloudIndexed& msg);
 
   /**
    * \brief Callback function for the ROS topic that contains the input point cloud and a list of (x,y,z) samples.
    * \param msg the incoming ROS message
-  */
+   */
   void cloud_samples_callback(const gpd_ros::CloudSamples& msg);
 
   /**
@@ -148,7 +146,7 @@ private:
   /**
    * \brief Callback function for the ROS topic that contains the input samples.
    * \param msg the incoming ROS message
-  */
+   */
   void samples_callback(const gpd_ros::SamplesMsg& msg);
 
   Eigen::Matrix3Xd fillMatrixFromFile(const std::string& filename, int num_normals);
@@ -171,7 +169,7 @@ private:
   std::vector<double> workspace_; ///< workspace limits
 
   gpd::GraspDetector* grasp_detector_; ///< used to run the GPD algorithm
-//gpd::SequentialImportanceSampling* importance_sampling_; ///< sequential importance sampling variation of GPD algorithm
+//  gpd::SequentialImportanceSampling* importance_sampling_; ///< sequential importance sampling variation of GPD algorithm
   GraspPlotter* rviz_plotter_; ///< used to plot detected grasps in rviz
 
   /** constants for input point cloud types */

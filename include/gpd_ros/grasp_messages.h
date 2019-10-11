@@ -41,9 +41,10 @@
 
 namespace GraspMessages
 {
-  gpd_ros::GraspConfigList createGraspListMsg(const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands, const std_msgs::Header& header);
+gpd_ros::GraspConfigList createGraspListMsg(const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands,
+                                            const std_msgs::Header& header);
 
-  gpd_ros::GraspConfig convertToGraspMsg(const gpd::candidate::Hand& hand);
-};
+gpd_ros::GraspConfig convertToGraspMsg(const gpd::candidate::Hand& hand);
+}
 
 #endif /* GRASP_MESSAGES_H_ */
