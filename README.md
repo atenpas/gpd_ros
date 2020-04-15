@@ -6,7 +6,7 @@
 
 ## Overview
 
-A ROS wrapper around the [GPD](https://github.com/atenpas/gpd2) package for detecting 6-DOF grasp poses for a
+A ROS wrapper around the [GPD](https://github.com/atenpas/gpd) package for detecting 6-DOF grasp poses for a
 2-finger robot hand (e.g., a parallel jaw gripper) in 3D point clouds.
 
 ## 1) Installation
@@ -14,7 +14,7 @@ A ROS wrapper around the [GPD](https://github.com/atenpas/gpd2) package for dete
 The following instructions have been tested on **Ubuntu 16.04**. Similar
 instructions should work for other Linux distributions.
 
-1. Install GPD. You can follow [these instructions](https://github.com/atenpas/gpd2#install).
+1. Install GPD. You can follow [these instructions](https://github.com/atenpas/gpd#install).
 
 2. Clone this repository into the `src` folder of your catkin workspace:
 
