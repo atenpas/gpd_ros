@@ -29,7 +29,6 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #ifndef GRASP_PLOTTER_H_
 #define GRASP_PLOTTER_H_
 
@@ -43,13 +42,11 @@
 #include <gpd/candidate/hand.h>
 #include <gpd/candidate/hand_geometry.h>
 
-
 /** GraspPlotter class
  *
  * \brief Draw grasps in rviz.
  *
  * This class provides functions to draw grasps in rviz.
- *
  */
 class GraspPlotter
 {
@@ -58,7 +55,7 @@ public:
   /**
    * \brief Constructor.
    * \param node the ROS node
-  */
+   */
   GraspPlotter(ros::NodeHandle& node, const gpd::candidate::HandGeometry& params);
 
   /**
@@ -73,8 +70,8 @@ public:
    * \param hands list of grasps
    * \param frame_id the name of the frame that the grasp is in
    */
-  visualization_msgs::MarkerArray convertToVisualGraspMsg(const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands,
-    const std::string& frame_id);
+  visualization_msgs::MarkerArray convertToVisualGraspMsg(
+      const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands, const std::string& frame_id);
 
   /**
    * \brief Convert a list of grasps to a ROS message that can be published to rviz.
@@ -87,7 +84,7 @@ public:
    * \param frame_id the name of the frame that the grasp is in
    */
   visualization_msgs::Marker createFingerMarker(const Eigen::Vector3d& center, const Eigen::Matrix3d& rot,
-    const Eigen::Vector3d& lwh, int id, const std::string& frame_id);
+                                                const Eigen::Vector3d& lwh, int id, const std::string& frame_id);
 
   /**
    * \brief Convert a list of grasps to a ROS message that can be published to rviz.
@@ -96,8 +93,8 @@ public:
    * \param frame_id the name of the frame that the grasp is in
    */
   visualization_msgs::Marker createHandBaseMarker(const Eigen::Vector3d& start, const Eigen::Vector3d& end,
-    const Eigen::Matrix3d& frame, double length, double height, int id, const std::string& frame_id);
-
+                                                  const Eigen::Matrix3d& frame, double length, double height, int id,
+                                                  const std::string& frame_id);
 
 private:
 

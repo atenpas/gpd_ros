@@ -1,10 +1,12 @@
 #include <gpd_ros/grasp_messages.h>
 
-gpd_ros::GraspConfigList GraspMessages::createGraspListMsg(const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands, const std_msgs::Header& header)
+gpd_ros::GraspConfigList GraspMessages::createGraspListMsg(
+    const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands, const std_msgs::Header& header)
 {
   gpd_ros::GraspConfigList msg;
 
-  for (int i = 0; i < hands.size(); i++) {
+  for (int i = 0; i < hands.size(); i++)
+  {
     msg.grasps.push_back(convertToGraspMsg(*hands[i]));
   }
 

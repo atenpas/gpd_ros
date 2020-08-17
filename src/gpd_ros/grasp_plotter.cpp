@@ -1,6 +1,5 @@
 #include <gpd_ros/grasp_plotter.h>
 
-
 GraspPlotter::GraspPlotter(ros::NodeHandle& node, const gpd::candidate::HandGeometry& params)
 {
   std::string rviz_topic;
@@ -13,7 +12,6 @@ GraspPlotter::GraspPlotter(ros::NodeHandle& node, const gpd::candidate::HandGeom
   finger_width_ = params.finger_width_;
 }
 
-
 void GraspPlotter::drawGrasps(const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands, const std::string& frame)
 {
   visualization_msgs::MarkerArray markers;
@@ -21,16 +19,15 @@ void GraspPlotter::drawGrasps(const std::vector<std::unique_ptr<gpd::candidate::
   rviz_pub_.publish(markers);
 }
 
-
-visualization_msgs::MarkerArray GraspPlotter::convertToVisualGraspMsg(const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands,
-  const std::string& frame_id)
+visualization_msgs::MarkerArray GraspPlotter::convertToVisualGraspMsg(
+    const std::vector<std::unique_ptr<gpd::candidate::Hand>>& hands, const std::string& frame_id)
 {
-  double hw = 0.5*outer_diameter_ - 0.5*finger_width_;
+  double hw = 0.5 * outer_diameter_ - 0.5 * finger_width_;
 
   visualization_msgs::MarkerArray marker_array;
   visualization_msgs::Marker left_finger, right_finger, base, approach;
   Eigen::Vector3d left_bottom, right_bottom, left_top, right_top, left_center, right_center, approach_center,
-    base_center;
+      base_center;
 
   for (int i = 0; i < hands.size(); i++)
   {
@@ -38,19 +35,19 @@ visualization_msgs::MarkerArray GraspPlotter::convertToVisualGraspMsg(const std:
     right_bottom = hands[i]->getPosition() + hw * hands[i]->getBinormal();
     left_top = left_bottom + hand_depth_ * hands[i]->getApproach();
     right_top = right_bottom + hand_depth_ * hands[i]->getApproach();
-    left_center = left_bottom + 0.5*(left_top - left_bottom);
-    right_center = right_bottom + 0.5*(right_top - right_bottom);
-    base_center = left_bottom + 0.5*(right_bottom - left_bottom) - 0.01*hands[i]->getApproach();
-    approach_center = base_center - 0.04*hands[i]->getApproach();
+    left_center = left_bottom + 0.5 * (left_top - left_bottom);
+    right_center = right_bottom + 0.5 * (right_top - right_bottom);
+    base_center = left_bottom + 0.5 * (right_bottom - left_bottom) - 0.01 * hands[i]->getApproach();
+    approach_center = base_center - 0.04 * hands[i]->getApproach();
 
     Eigen::Vector3d finger_lwh, approach_lwh;
     finger_lwh << hand_depth_, finger_width_, hand_height_;
     approach_lwh << 0.08, finger_width_, hand_height_;
 
     base = createHandBaseMarker(left_bottom, right_bottom, hands[i]->getFrame(), 0.02, hand_height_, i, frame_id);
-    left_finger = createFingerMarker(left_center, hands[i]->getFrame(), finger_lwh, i*3, frame_id);
-    right_finger = createFingerMarker(right_center, hands[i]->getFrame(), finger_lwh, i*3+1, frame_id);
-    approach = createFingerMarker(approach_center, hands[i]->getFrame(), approach_lwh, i*3+2, frame_id);
+    left_finger = createFingerMarker(left_center, hands[i]->getFrame(), finger_lwh, i * 3, frame_id);
+    right_finger = createFingerMarker(right_center, hands[i]->getFrame(), finger_lwh, i * 3 + 1, frame_id);
+    approach = createFingerMarker(approach_center, hands[i]->getFrame(), approach_lwh, i * 3 + 2, frame_id);
 
     marker_array.markers.push_back(left_finger);
     marker_array.markers.push_back(right_finger);
@@ -61,9 +58,9 @@ visualization_msgs::MarkerArray GraspPlotter::convertToVisualGraspMsg(const std:
   return marker_array;
 }
 
-
-visualization_msgs::Marker GraspPlotter::createFingerMarker(const Eigen::Vector3d& center,
-  const Eigen::Matrix3d& frame, const Eigen::Vector3d& lwh, int id, const std::string& frame_id)
+visualization_msgs::Marker GraspPlotter::createFingerMarker(const Eigen::Vector3d& center, const Eigen::Matrix3d& frame,
+                                                            const Eigen::Vector3d& lwh, int id,
+                                                            const std::string& frame_id)
 {
   visualization_msgs::Marker marker;
   marker.header.frame_id = frame_id;
@@ -97,10 +94,9 @@ visualization_msgs::Marker GraspPlotter::createFingerMarker(const Eigen::Vector3
   return marker;
 }
 
-
-visualization_msgs::Marker GraspPlotter::createHandBaseMarker(const Eigen::Vector3d& start,
-  const Eigen::Vector3d& end, const Eigen::Matrix3d& frame, double length, double height, int id,
-  const std::string& frame_id)
+visualization_msgs::Marker GraspPlotter::createHandBaseMarker(const Eigen::Vector3d& start, const Eigen::Vector3d& end,
+                                                              const Eigen::Matrix3d& frame, double length,
+                                                              double height, int id, const std::string& frame_id)
 {
   Eigen::Vector3d center = start + 0.5 * (end - start);
 

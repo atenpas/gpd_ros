@@ -29,10 +29,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #ifndef GRASP_DETECTION_SERVER_H_
 #define GRASP_DETECTION_SERVER_H_
-
 
 // ROS
 #include <eigen_conversions/eigen_msg.h>
@@ -66,12 +64,12 @@ public:
   /**
    * \brief Constructor.
    * \param node the ROS node
-  */
+   */
   GraspDetectionServer(ros::NodeHandle& node);
 
   /**
    * \brief Destructor.
-  */
+   */
   ~GraspDetectionServer()
   {
     delete cloud_camera_;
@@ -85,7 +83,6 @@ public:
    * \param res the service response
    */
   bool detectGrasps(gpd_ros::detect_grasps::Request& req, gpd_ros::detect_grasps::Response& res);
-
 
 private:
 
